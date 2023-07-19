@@ -98,12 +98,20 @@ load_world:                 ; Load the memory from WorldData into PPU nametable 
 load_world_finish:
     ldx #$00
     ldy #$00
-set_attributes:
-    lda #$55
+load_attributes:
+    sta PPU_STATUS          ;   prepare ppu
+    lda #$23                ;
+    sta PPU_ADDR
+    lda #$C0
+    sta PPU_ADDR
+
+    ldx #$00
+load_attributes_loop:
+    lda AttributeData, X
     sta PPU_DATA
     inx
-    cpx #$40
-    bne set_attributes
+    cpx #$40                ;load 64 bytes of attribute data (use the background pallete)
+    bne load_attributes_loop
 
     ldx #$00
     ldy #$00
@@ -111,7 +119,7 @@ load_sprites:           ; Load sprite data into the 100 byte block at $0200 we l
     lda SpriteData, X   ;   A = SpriteData[X]
     sta $0200, X        ;   *($0200 + X) = A
     inx                 ;   -
-    cpx #$20            ;   32 bytes of sprite oam data
+    cpx #$04            ;   4 bytes of sprite oam data
     bne load_sprites    ;   -
 
     ;jmp inf_loop

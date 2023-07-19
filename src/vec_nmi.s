@@ -4,8 +4,12 @@
 .segment "STARTUP"
 vec_nmi:
     bit PPU_STATUS          ; read PPU_STATUS
-    ; prepare ppu sprites
+    lda #$00
+    sta PPU_SCROLL
+    lda #$00
+    sta PPU_SCROLL
 
+    ; prepare ppu sprites
     lda #$20                ; $0200 (Sprite data) -> PPU
     sta PPU_OAMDATA         ; -
     lda #%00011110

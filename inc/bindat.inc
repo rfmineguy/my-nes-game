@@ -1,3 +1,4 @@
 .import PalleteData
+.import AttributeData
 .import WorldData
 .import SpriteData
