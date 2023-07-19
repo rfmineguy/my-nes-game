@@ -3,6 +3,20 @@
 .define CPU_PPU_CTRL_REGS      $2000
 .define CPU_APU_REGS           $4000
 
+; Controller ports
+.define CONTROLLER_P1          $4016
+.define CONTROLLER_P2          $4017
+
+; Controller button flags
+.define BUTTON_A               %10000000
+.define BUTTON_B               %01000000
+.define BUTTON_SEL             %00100000
+.define BUTTON_STT             %00010000
+.define BUTTON_UP              %00001000
+.define BUTTON_DOWN            %00000100
+.define BUTTON_LEFT            %00000010
+.define BUTTON_RIGHT           %00000001
+
 ; APU registers
 .define APU_FRAME_COUNTER_REG  $4017
 

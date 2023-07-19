@@ -1,7 +1,9 @@
 .export vec_reset
 .include "inc/nes_constants.inc"
 .include "inc/variables.inc"
+.include "inc/controllers.inc"
 .include "inc/bindat.inc"
+.import wait_nmi
 
 .segment "STARTUP"
 vec_reset:
@@ -19,6 +21,13 @@ init_variables:
     sta zp_var+1
     sta zp_world_addr
     sta zp_world_addr+1
+    sta zp_buttons_1_curr_frame
+    sta zp_buttons_1_prev_frame
+    sta zp_buttons_1_pressed
+    sta zp_buttons_2_curr_frame
+    sta zp_buttons_2_prev_frame
+    sta zp_buttons_2_pressed
+    sta zp_cursor_index_pos
 
     ldx #00
     lda #00
@@ -132,4 +141,24 @@ load_sprites:           ; Load sprite data into the 100 byte block at $0200 we l
     sta PPU_MASK        ;    -
 
 inf_loop:
+    jsr wait_nmi
+Left:
+    lda zp_buttons_1_pressed
+    and #BUTTON_LEFT
+    cmp #BUTTON_LEFT
+    bne Right
+    ldx zp_cursor_index_pos
+    cpx #01
+    bmi Right               ;avoid going negative
+    dec zp_cursor_index_pos
+Right:
+    lda zp_buttons_1_pressed
+    and #BUTTON_RIGHT
+    cmp #BUTTON_RIGHT
+    bne lend
+    ldx zp_cursor_index_pos
+    cpx #09
+    bpl lend
+    inc zp_cursor_index_pos
+lend:
     jmp inf_loop

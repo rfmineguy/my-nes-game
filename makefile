@@ -14,10 +14,10 @@ always: clean
 	@echo "$(OBJECTS)"
 	mkdir -p $(OUT_DIR)
 
-build: always $(OUT_DIR)/main.nes
+build: always $(OUT_DIR)/obsession.nes
 
-$(OUT_DIR)/main.nes: $(OBJECTS)
-	ld65 $^ -v -o $@ -t nes --dbgfile $(OUT_DIR)/main.dbg -m $(OUT_DIR)/main.map 
+$(OUT_DIR)/obsession.nes: $(OBJECTS)
+	ld65 $^ -v -o $@ -t nes --dbgfile $(OUT_DIR)/obsession.dbg -m $(OUT_DIR)/obsession.map 
 
 $(OBJECTS): $(OUT_DIR)/%.o: $(SRC_DIR)/%.s
 	ca65 -I . -I $(RES_DIR) $^ -v -o $@ --debug-info 

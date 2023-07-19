@@ -32,14 +32,14 @@ AttributeData:  ; 64 bytes
 .byte %00110011, %00001111, %00001111, %00001111, %00001111, %00001111, %00001111, %11001100 ; row 7
 
 SpriteData:
-.byte $10, $00, $06, $08 ; y-pos, tile-num, pallete-num, x-pos
-;.byte $10, $01, $00, $10
-;.byte $18, $02, $00, $08
-;.byte $18, $03, $00, $10
-;.byte $20, $04, $00, $08
-;.byte $20, $05, $00, $10
-;.byte $28, $06, $00, $08
-;.byte $28, $07, $00, $10
+.byte $40, $06, $00, $10 ; y-pos, tile-num, pallete-num, x-pos
+.byte $00, $00, $00, $00
+.byte $00, $00, $00, $00
+.byte $00, $00, $00, $00
+.byte $00, $00, $00, $00
+.byte $00, $00, $00, $00
+.byte $00, $00, $00, $00
+.byte $00, $00, $00, $00
 
 .segment "CHARS"
 .incbin "res/spritesheet.chr"
