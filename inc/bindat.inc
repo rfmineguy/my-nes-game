@@ -2,3 +2,4 @@
 .import AttributeData
 .import WorldData
 .import SpriteData
+.import CursorXPosTable

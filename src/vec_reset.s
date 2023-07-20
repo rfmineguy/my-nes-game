@@ -28,6 +28,7 @@ init_variables:
     sta zp_buttons_2_prev_frame
     sta zp_buttons_2_pressed
     sta zp_cursor_index_pos
+    ;sta zp_cursor_side
 
     ldx #00
     lda #00
@@ -142,23 +143,40 @@ load_sprites:           ; Load sprite data into the 100 byte block at $0200 we l
 
 inf_loop:
     jsr wait_nmi
+                            ; Begin user input
 Left:
     lda zp_buttons_1_pressed
-    and #BUTTON_LEFT
-    cmp #BUTTON_LEFT
-    bne Right
-    ldx zp_cursor_index_pos
-    cpx #01
-    bmi Right               ;avoid going negative
-    dec zp_cursor_index_pos
+    and #BUTTON_LEFT        ; Check if LEFT was pressed
+    cmp #BUTTON_LEFT        ;  -
+    bne Right               ;  branch away if not
+    ldx zp_cursor_index_pos ;  Check if the cursor will go offscreen if moved
+    cpx #01                 ;    -
+    bmi Right               ;    - avoid going negative
+    dec zp_cursor_index_pos ;  Move cursor left
 Right:
     lda zp_buttons_1_pressed
-    and #BUTTON_RIGHT
-    cmp #BUTTON_RIGHT
-    bne lend
-    ldx zp_cursor_index_pos
-    cpx #09
-    bpl lend
-    inc zp_cursor_index_pos
+    and #BUTTON_RIGHT       ; Check if RIGHT was pressed
+    cmp #BUTTON_RIGHT       ;  -
+    bne lend                ;  branch away if not
+    ldx zp_cursor_index_pos ;  Check if the cursor will go offscreen if moved
+    cpx #09                 ;    -
+    bpl lend                ;    - avoid going passed 10
+    inc zp_cursor_index_pos ;  Move cursor right
+;Up:
+;    lda zp_buttons_1_pressed
+;    and #BUTTON_UP
+;    cmp #BUTTON_UP
+;    bne Down
+;    ldx zp_cursor_vertical_pos
+;    cpx #01
+;    bpl lend
+;    inc zp_cursor_vertical_pos
+;Down:
 lend:
+    ; Move the cursor to where it should be given the index
+    
+    ldx zp_cursor_index_pos
+    lda CursorXPosTable, X       ; A = SpriteData[X]
+    sta $0203
+    
     jmp inf_loop

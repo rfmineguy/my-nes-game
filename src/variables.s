@@ -7,6 +7,7 @@
 .export zp_buttons_2_prev_frame
 .export zp_buttons_2_pressed
 .export zp_cursor_index_pos
+;.export zp_cursor_vertical_pos ; 0 - top player, 1 - center area, 2 - bottom player
 .export zp_nmi_retraces
 
 .segment "ZEROPAGE"
