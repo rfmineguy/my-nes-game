@@ -11,4 +11,14 @@
 .importzp zp_cursor_index_pos
 .importzp zp_cursor_vertical_pos
 
+.importzp zp_prng_seed
+.importzp zp_dice_1
+.importzp zp_dice_2
+
+.importzp zp0
+.importzp zp1
+
+.importzp Res
+.importzp ResHi
+
 .define CURSOR_X_ADDR $0201

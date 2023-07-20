@@ -3,6 +3,8 @@
 .include "inc/variables.inc"
 .include "inc/controllers.inc"
 .include "inc/bindat.inc"
+.include "inc/random.inc"
+.include "inc/arith.inc"
 .import wait_nmi
 
 .segment "STARTUP"
@@ -28,6 +30,9 @@ init_variables:
     sta zp_buttons_2_prev_frame
     sta zp_buttons_2_pressed
     sta zp_cursor_index_pos
+    lda #34
+    sta zp_prng_seed
+
     ;sta zp_cursor_side
 
     ldx #00
@@ -175,11 +180,42 @@ Down:
     lda zp_buttons_1_pressed
     and #BUTTON_DOWN
     cmp #BUTTON_DOWN
-    bne lend
+    bne Select
     ldx zp_cursor_vertical_pos
     cpx #02                 ; avoid going passed 2
-    bpl lend                ; if positive branch
+    bpl Select              ; if positive branch
     inc zp_cursor_vertical_pos
+Select:
+    lda zp_buttons_1_pressed
+    and #BUTTON_SEL
+    cmp #BUTTON_SEL
+    bne lend
+
+    ; randomize dice1
+rng_dice1_lp:
+    lda zp_nmi_retraces
+    sta zp_prng_seed
+    jsr prng
+    and #%00000111
+    sta zp_dice_1
+    cmp #6
+    beq rng_dice1_lp
+    cmp #7
+    beq rng_dice1_lp
+
+    ; randomize dice2
+rng_dice2_lp:
+    lda zp_nmi_retraces
+    sta zp_prng_seed
+    jsr prng
+    and #%000000111
+    sta zp_dice_2
+    cmp #6
+    beq rng_dice2_lp
+    cmp #7
+    beq rng_dice2_lp
+
+
 lend:
     ; Move the cursor to where it should be given the index
     
