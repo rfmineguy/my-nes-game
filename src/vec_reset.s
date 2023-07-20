@@ -6,6 +6,7 @@
 .include "inc/random.inc"
 .include "inc/arith.inc"
 .include "inc/draw_buffer.inc"
+.include "inc/game_logic.inc"
 .import wait_nmi
 
 .segment "STARTUP"
@@ -135,7 +136,7 @@ load_sprites:           ; Load sprite data into the 100 byte block at $0200 we l
     lda SpriteData, X   ;   A = SpriteData[X]
     sta $0200, X        ;   *($0200 + X) = A
     inx                 ;   -
-    cpx #$04            ;   4 bytes of sprite oam data
+    cpx #$04            ;   4 bytes of oam data per sprite
     bne load_sprites    ;   -
 
     ;jmp inf_loop
@@ -192,29 +193,8 @@ Select:
     cmp #BUTTON_SEL
     bne lend
 
-    ; randomize dice1
-rng_dice1_lp:
-    lda zp_nmi_retraces
-    sta zp_prng_seed
-    jsr prng
-    and #%00000111
-    sta zp_dice_1
-    cmp #6
-    beq rng_dice1_lp
-    cmp #7
-    beq rng_dice1_lp
-
-    ; randomize dice2
-rng_dice2_lp:
-    lda zp_nmi_retraces
-    sta zp_prng_seed
-    jsr prng
-    and #%000000111
-    sta zp_dice_2
-    cmp #6
-    beq rng_dice2_lp
-    cmp #7
-    beq rng_dice2_lp
+    jsr roll_dice_1         ; in 'game_logic.s'
+    jsr roll_dice_2         ; in 'game_logic.s'
 
     lda #00
     adc zp_dice_1
