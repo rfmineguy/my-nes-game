@@ -5,6 +5,7 @@
 .include "inc/bindat.inc"
 .include "inc/random.inc"
 .include "inc/arith.inc"
+.include "inc/draw_buffer.inc"
 .import wait_nmi
 
 .segment "STARTUP"
@@ -215,6 +216,11 @@ rng_dice2_lp:
     cmp #7
     beq rng_dice2_lp
 
+    lda #00
+    adc zp_dice_1
+    adc zp_dice_2
+    sta zp_dice_combined
+    inc zp_dice_combined
 
 lend:
     ; Move the cursor to where it should be given the index
@@ -226,5 +232,28 @@ lend:
     ldx zp_cursor_vertical_pos
     lda CursorYPosTable, X       ; A = CursorYPosTable[X]
     sta $0200                    ; put this into the y pos of the cursor sprite
+
+    ; Adjust background so that the dice numbers match the internal values
+    ; $21C6 is the left dice
+    ; $21D9 is the right dice
+    jsr draw_buff_reset          ; reset the draw buffer
+
+    ; Queue the left dice change
+    lda #$21
+    jsr draw_buff_append_byte
+    lda #$C6
+    jsr draw_buff_append_byte
+    lda zp_dice_1
+    adc #$8
+    jsr draw_buff_append_byte
+
+    ; Queue the right dice change
+    lda #$21
+    jsr draw_buff_append_byte
+    lda #$D9
+    jsr draw_buff_append_byte
+    lda zp_dice_2
+    adc #$8
+    jsr draw_buff_append_byte
 
     jmp inf_loop

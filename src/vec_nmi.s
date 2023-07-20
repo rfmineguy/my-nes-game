@@ -13,7 +13,26 @@ wait_nmi:
     rts
 
 vec_nmi:
+
     jsr ReadControls
+    
+    lda #%00000000          ; disable rendering
+    sta PPU_MASK            ; -
+
+    bit PPU_STATUS          ; processor draw buffer
+    ldx #00
+proc_draw_buffer:
+    lda vram_draw_buffer, X
+    sta PPU_ADDR
+    inx
+    lda vram_draw_buffer, X
+    sta PPU_ADDR
+    inx
+    lda vram_draw_buffer, X
+    sta PPU_DATA
+    inx
+    cpx vram_draw_buffer_size  ; X - M
+    bne proc_draw_buffer       ; loop until X - vram_draw_buffer_size == 0 
 
     bit PPU_STATUS          ; read PPU_STATUS
     lda #$00                ; zero x scroll

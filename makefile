@@ -16,8 +16,10 @@ always: clean
 
 build: always $(OUT_DIR)/obsession.nes
 
+#ld65 $^ -v -o $@ -t nes --dbgfile $(OUT_DIR)/obsession.dbg -m $(OUT_DIR)/obsession.map 
+
 $(OUT_DIR)/obsession.nes: $(OBJECTS)
-	ld65 $^ -v -o $@ -t nes --dbgfile $(OUT_DIR)/obsession.dbg -m $(OUT_DIR)/obsession.map 
+	ld65 $^ -v -o $@ --config nes_modified.cfg --dbgfile $(OUT_DIR)/obsession.dbg -m $(OUT_DIR)/obsession.map 
 
 $(OBJECTS): $(OUT_DIR)/%.o: $(SRC_DIR)/%.s
 	ca65 -I . -I $(RES_DIR) $^ -v -o $@ --debug-info 

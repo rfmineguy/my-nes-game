@@ -14,11 +14,15 @@
 .importzp zp_prng_seed
 .importzp zp_dice_1
 .importzp zp_dice_2
+.importzp zp_dice_combined
 
 .importzp zp0
 .importzp zp1
 
 .importzp Res
 .importzp ResHi
+
+.import vram_draw_buffer
+.import vram_draw_buffer_size
 
 .define CURSOR_X_ADDR $0201
