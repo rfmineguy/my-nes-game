@@ -3,3 +3,4 @@
 .import WorldData
 .import SpriteData
 .import CursorXPosTable
+.import CursorYPosTable

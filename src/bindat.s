@@ -3,6 +3,7 @@
 .export WorldData
 .export SpriteData
 .export CursorXPosTable
+.export CursorYPosTable
 
 .segment "STARTUP"
 PalleteData:
@@ -44,6 +45,9 @@ SpriteData:
 
 CursorXPosTable:
 .byte $10, $28, $40, $58, $70, $88, $A0, $B8, $D0, $E8
+
+CursorYPosTable:
+.byte $40, $70, $E0
 
 .segment "CHARS"
 .incbin "res/spritesheet.chr"

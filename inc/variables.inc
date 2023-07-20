@@ -9,5 +9,6 @@
 .importzp zp_nmi_retraces
 
 .importzp zp_cursor_index_pos
+.importzp zp_cursor_vertical_pos
 
 .define CURSOR_X_ADDR $0201

@@ -157,26 +157,38 @@ Right:
     lda zp_buttons_1_pressed
     and #BUTTON_RIGHT       ; Check if RIGHT was pressed
     cmp #BUTTON_RIGHT       ;  -
-    bne lend                ;  branch away if not
+    bne Up                  ;  branch away if not
     ldx zp_cursor_index_pos ;  Check if the cursor will go offscreen if moved
     cpx #09                 ;    -
-    bpl lend                ;    - avoid going passed 10
+    bpl Up                  ;    - avoid going passed 10
     inc zp_cursor_index_pos ;  Move cursor right
-;Up:
-;    lda zp_buttons_1_pressed
-;    and #BUTTON_UP
-;    cmp #BUTTON_UP
-;    bne Down
-;    ldx zp_cursor_vertical_pos
-;    cpx #01
-;    bpl lend
-;    inc zp_cursor_vertical_pos
-;Down:
+Up:
+    lda zp_buttons_1_pressed
+    and #BUTTON_UP
+    cmp #BUTTON_UP
+    bne Down
+    ldx zp_cursor_vertical_pos
+    cpx #01                 ; avoid going negative (X - 1)
+    bmi Down                ; if negative branch down
+    dec zp_cursor_vertical_pos
+Down:
+    lda zp_buttons_1_pressed
+    and #BUTTON_DOWN
+    cmp #BUTTON_DOWN
+    bne lend
+    ldx zp_cursor_vertical_pos
+    cpx #02                 ; avoid going passed 2
+    bpl lend                ; if positive branch
+    inc zp_cursor_vertical_pos
 lend:
     ; Move the cursor to where it should be given the index
     
     ldx zp_cursor_index_pos
-    lda CursorXPosTable, X       ; A = SpriteData[X]
-    sta $0203
-    
+    lda CursorXPosTable, X       ; A = CursorXPosTable[X]
+    sta $0203                    ; put this into the x pos of the cursor sprite
+
+    ldx zp_cursor_vertical_pos
+    lda CursorYPosTable, X       ; A = CursorYPosTable[X]
+    sta $0200                    ; put this into the y pos of the cursor sprite
+
     jmp inf_loop
